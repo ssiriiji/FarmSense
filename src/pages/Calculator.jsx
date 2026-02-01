@@ -9,11 +9,11 @@ import {
   Droplets,
   Thermometer,
   MapPin,
-  Calendar,
-  DollarSign
+  Calendar
 } from 'lucide-react';
 import { useFarm } from '../context/FarmContext';
 import { cropsData } from '../data/crops';
+import { provinces } from '../data/provinces'; // เพิ่มบรรทัดนี้
 
 const Calculator = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const Calculator = () => {
     crop: selectedCropFromDashboard,
     area: '',
     season: '',
-    province: ''
+    province: '' // เปลี่ยนจาก default value
   });
 
   const cropInfo = cropsData[formData.crop] || cropsData.rice;
@@ -197,19 +197,24 @@ const Calculator = () => {
                   </select>
                 </div>
 
-                {/* จังหวัด */}
+                {/* จังหวัด - เปลี่ยนเป็น dropdown */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-3">
                     จังหวัด
                   </label>
-                  <input
-                    type="text"
+                  <select
                     value={formData.province}
                     onChange={(e) => setFormData({...formData, province: e.target.value})}
-                    className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition hover:border-gray-300"
-                    placeholder="เช่น สุพรรณบุรี"
+                    className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition font-medium bg-white hover:border-gray-300"
                     required
-                  />
+                  >
+                    <option value="">เลือกจังหวัด</option>
+                    {provinces.map((province) => (
+                      <option key={province.id} value={province.name}>
+                        {province.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <button
