@@ -182,7 +182,7 @@ const Calculator = () => {
               <h2 className="text-2xl font-bold text-gray-800 mb-6">กรอกข้อมูลการปลูก</h2>
               
               <form onSubmit={handleSubmit} className="space-y-5">
-                {/* เลือกพืช */}
+                {/* เลือกพืช - แก้ไขส่วนนี้ */}
                 <div>
                   <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
                     <Sprout className="w-4 h-4 text-green-600" />
@@ -194,9 +194,16 @@ const Calculator = () => {
                     className="w-full px-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition font-medium bg-white hover:border-gray-300"
                     required
                   >
-                    <option value="rice">ข้าว 🌾</option>
-                    <option value="cassava" disabled>มันสำปะหลัง (เร็วๆ นี้)</option>
-                    <option value="corn" disabled>ข้าวโพด (เร็วๆ นี้)</option>
+                    <optgroup label="พืชไร่">
+                      <option value="rice">ข้าว</option>
+                      <option value="sugarcane" disabled>อ้อย (เร็วๆ นี้)</option>
+                      <option value="cassava" disabled>มันสำปะหลัง (เร็วๆ นี้)</option>
+                      <option value="corn" disabled>ข้าวโพดเลี้ยงสัตว์ (เร็วๆ นี้)</option>
+                    </optgroup>
+                    <optgroup label="พืชสวน">
+                      <option value="rubber" disabled>ยางพารา (เร็วๆ นี้)</option>
+                      <option value="palm" disabled>ปาล์มน้ำมัน (เร็วๆ นี้)</option>
+                    </optgroup>
                   </select>
                 </div>
 
@@ -264,7 +271,7 @@ const Calculator = () => {
               </form>
             </div>
 
-            {/* ฟอร์มต้นทุน - ใหม่! */}
+            {/* ฟอร์มต้นทุน */}
             <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
               <h3 className="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
                 <DollarSign className="w-6 h-6 text-orange-600" />

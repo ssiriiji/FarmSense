@@ -144,8 +144,8 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* ENSO Status - Single Line */}
-            <div className="flex items-center justify-between pt-4 border-t border-white/30">
+            {/* ENSO Status - Single Line (Hidden on Mobile) */}
+            <div className="hidden md:flex items-center justify-between pt-4 border-t border-white/30">
               <div className="flex items-center gap-2">
                 <span className="text-lg">🌊</span>
                 <p className="text-xs font-semibold">ENSO:</p>

@@ -14,7 +14,7 @@ import {
   AlertCircle,
   Info,
   AlertTriangle,
-  ArrowRight // เพิ่มบรรทัดนี้
+  ArrowRight
 } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { weatherForecast } from '../data/weatherForecast';
@@ -80,7 +80,7 @@ const WeatherForecast = () => {
           </div>
           <div className="ml-auto flex items-center gap-2 text-sm text-gray-600">
             <MapPin className="w-4 h-4" />
-            <span>{weatherForecast.location}</span>
+            <span className="hidden sm:inline">{weatherForecast.location}</span>
           </div>
         </div>
       </nav>
@@ -89,37 +89,37 @@ const WeatherForecast = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         
         {/* Current Weather - Hero Section */}
-        <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl shadow-2xl p-8 md:p-12 mb-8 text-white">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl shadow-2xl p-6 md:p-12 mb-8 text-white">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
             <div className="flex-1 text-center md:text-left">
               <div className="flex items-center gap-2 mb-2 justify-center md:justify-start">
-                <Calendar className="w-5 h-5 opacity-90" />
-                <p className="text-lg opacity-90">{weatherForecast.current.date} - {selectedDay.day}</p>
+                <Calendar className="w-4 h-4 md:w-5 md:h-5 opacity-90" />
+                <p className="text-sm md:text-lg opacity-90">{weatherForecast.current.date} - {selectedDay.day}</p>
               </div>
-              <h2 className="text-6xl md:text-8xl font-bold mb-4">
+              <h2 className="text-5xl md:text-8xl font-bold mb-2 md:mb-4">
                 {selectedDay.tempHigh}°C
               </h2>
-              <p className="text-2xl mb-2 opacity-90">{selectedDay.condition}</p>
-              <p className="text-lg opacity-75">ต่ำสุด {selectedDay.tempLow}°C</p>
+              <p className="text-xl md:text-2xl mb-1 md:mb-2 opacity-90">{selectedDay.condition}</p>
+              <p className="text-base md:text-lg opacity-75">ต่ำสุด {selectedDay.tempLow}°C</p>
             </div>
             
-            <div className="text-9xl">{selectedDay.icon}</div>
+            <div className="text-6xl md:text-9xl">{selectedDay.icon}</div>
             
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center">
-                <Droplets className="w-6 h-6 mx-auto mb-2" />
-                <p className="text-sm opacity-90">ความชื้น</p>
-                <p className="text-2xl font-bold">{selectedDay.humidity}%</p>
+            <div className="grid grid-cols-3 md:grid-cols-2 gap-3 md:gap-6 w-full md:w-auto">
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 md:p-4 text-center">
+                <Droplets className="w-5 h-5 md:w-6 md:h-6 mx-auto mb-1 md:mb-2" />
+                <p className="text-xs md:text-sm opacity-90">ความชื้น</p>
+                <p className="text-xl md:text-2xl font-bold">{selectedDay.humidity}%</p>
               </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center">
-                <CloudRain className="w-6 h-6 mx-auto mb-2" />
-                <p className="text-sm opacity-90">โอกาสฝน</p>
-                <p className="text-2xl font-bold">{selectedDay.rainChance}%</p>
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 md:p-4 text-center">
+                <CloudRain className="w-5 h-5 md:w-6 md:h-6 mx-auto mb-1 md:mb-2" />
+                <p className="text-xs md:text-sm opacity-90">โอกาสฝน</p>
+                <p className="text-xl md:text-2xl font-bold">{selectedDay.rainChance}%</p>
               </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center col-span-2">
-                <Wind className="w-6 h-6 mx-auto mb-2" />
-                <p className="text-sm opacity-90">ความเร็วลม</p>
-                <p className="text-2xl font-bold">{weatherForecast.current.windSpeed} กม./ชม.</p>
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 md:p-4 text-center col-span-3 md:col-span-2">
+                <Wind className="w-5 h-5 md:w-6 md:h-6 mx-auto mb-1 md:mb-2" />
+                <p className="text-xs md:text-sm opacity-90">ความเร็วลม</p>
+                <p className="text-xl md:text-2xl font-bold">{weatherForecast.current.windSpeed} กม./ชม.</p>
               </div>
             </div>
           </div>
@@ -127,33 +127,33 @@ const WeatherForecast = () => {
 
         {/* 7-Day Forecast Cards */}
         <div className="mb-8">
-          <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <Calendar className="w-6 h-6 text-blue-600" />
+          <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <Calendar className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
             พยากรณ์อากาศ 7 วัน
           </h3>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 md:gap-4">
             {weatherForecast.forecast.map((day, index) => (
               <div
                 key={index}
                 onClick={() => setSelectedDay(day)}
-                className={`bg-white rounded-xl p-4 shadow-lg cursor-pointer transition-all hover:shadow-xl hover:scale-105 ${
+                className={`bg-white rounded-xl p-3 md:p-4 shadow-lg cursor-pointer transition-all hover:shadow-xl hover:scale-105 ${
                   selectedDay.date === day.date ? 'ring-2 ring-blue-500 bg-blue-50' : ''
                 }`}
               >
-                <p className="text-sm font-semibold text-gray-600 mb-1">{day.day}</p>
-                <p className="text-xs text-gray-500 mb-3">{day.date}</p>
-                <div className="text-4xl mb-3 text-center">{day.icon}</div>
+                <p className="text-xs md:text-sm font-semibold text-gray-600 mb-1">{day.day}</p>
+                <p className="text-[10px] md:text-xs text-gray-500 mb-2 md:mb-3">{day.date}</p>
+                <div className="text-3xl md:text-4xl mb-2 md:mb-3 text-center">{day.icon}</div>
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-800">{day.tempHigh}°</p>
-                  <p className="text-sm text-gray-500">{day.tempLow}°</p>
+                  <p className="text-xl md:text-2xl font-bold text-gray-800">{day.tempHigh}°</p>
+                  <p className="text-xs md:text-sm text-gray-500">{day.tempLow}°</p>
                 </div>
-                <div className="mt-3 pt-3 border-t border-gray-200">
+                <div className="mt-2 md:mt-3 pt-2 md:pt-3 border-t border-gray-200">
                   <div className="flex items-center justify-center gap-1 text-blue-600">
-                    <CloudRain className="w-4 h-4" />
+                    <CloudRain className="w-3 h-3 md:w-4 md:h-4" />
                     <span className="text-xs font-semibold">{day.rainChance}%</span>
                   </div>
-                  <p className="text-xs text-gray-600 mt-1 text-center">{day.rainStatus}</p>
+                  <p className="text-[10px] md:text-xs text-gray-600 mt-1 text-center truncate">{day.rainStatus}</p>
                 </div>
               </div>
             ))}
@@ -164,13 +164,13 @@ const WeatherForecast = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           
           {/* Temperature Chart */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-            <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-              <TrendingUp className="w-6 h-6 text-orange-600" />
-              แนวโน้มอุณหภูมิ 7 วัน
+          <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-gray-100">
+            <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-4 md:mb-6 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-orange-600" />
+              <span className="text-sm md:text-base">แนวโน้มอุณหภูมิ 7 วัน</span>
             </h3>
             
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250}>
               <AreaChart data={tempChartData}>
                 <defs>
                   <linearGradient id="colorHigh" x1="0" y1="0" x2="0" y2="1">
@@ -185,28 +185,29 @@ const WeatherForecast = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                 <XAxis 
                   dataKey="date" 
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 10 }}
                   stroke="#6b7280"
                 />
                 <YAxis 
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 10 }}
                   stroke="#6b7280"
                   domain={[20, 40]}
-                  label={{ value: '°C', angle: -90, position: 'insideLeft' }}
+                  label={{ value: '°C', angle: -90, position: 'insideLeft', style: { fontSize: 10 } }}
                 />
                 <Tooltip 
                   formatter={(value) => [value + '°C']}
                   contentStyle={{ 
                     backgroundColor: '#fff', 
                     border: '2px solid #3b82f6',
-                    borderRadius: '8px'
+                    borderRadius: '8px',
+                    fontSize: '12px'
                   }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="high" 
                   stroke="#f97316" 
-                  strokeWidth={3}
+                  strokeWidth={2}
                   fill="url(#colorHigh)"
                   name="อุณหภูมิสูงสุด"
                 />
@@ -214,7 +215,7 @@ const WeatherForecast = () => {
                   type="monotone" 
                   dataKey="low" 
                   stroke="#3b82f6" 
-                  strokeWidth={3}
+                  strokeWidth={2}
                   fill="url(#colorLow)"
                   name="อุณหภูมิต่ำสุด"
                 />
@@ -223,31 +224,32 @@ const WeatherForecast = () => {
           </div>
 
           {/* Rain & Humidity Chart */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-            <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-              <CloudRain className="w-6 h-6 text-blue-600" />
-              โอกาสฝนและความชื้น
+          <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-gray-100">
+            <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-4 md:mb-6 flex items-center gap-2">
+              <CloudRain className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+              <span className="text-sm md:text-base">โอกาสฝนและความชื้น</span>
             </h3>
             
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250}>
               <BarChart data={rainChartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                 <XAxis 
                   dataKey="date" 
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 10 }}
                   stroke="#6b7280"
                 />
                 <YAxis 
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 10 }}
                   stroke="#6b7280"
-                  label={{ value: '%', angle: -90, position: 'insideLeft' }}
+                  label={{ value: '%', angle: -90, position: 'insideLeft', style: { fontSize: 10 } }}
                 />
                 <Tooltip 
                   formatter={(value) => [value + '%']}
                   contentStyle={{ 
                     backgroundColor: '#fff', 
                     border: '2px solid #3b82f6',
-                    borderRadius: '8px'
+                    borderRadius: '8px',
+                    fontSize: '12px'
                   }}
                 />
                 <Bar dataKey="chance" fill="#3b82f6" radius={[8, 8, 0, 0]} name="โอกาสฝน" />
@@ -257,74 +259,74 @@ const WeatherForecast = () => {
           </div>
         </div>
 
-        {/* El Niño / La Niña Section - ใหม่! */}
-        <div className="bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 rounded-2xl shadow-lg p-8 border-2 border-orange-200 mb-8">
+        {/* El Niño / La Niña Section */}
+        <div className="bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 rounded-2xl shadow-lg p-6 md:p-8 border-2 border-orange-200 mb-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="bg-orange-100 p-3 rounded-xl">
-              <span className="text-4xl">🌊</span>
+            <div className="bg-orange-100 p-2 md:p-3 rounded-xl">
+              <span className="text-3xl md:text-4xl">🌊</span>
             </div>
             <div>
-              <h3 className="text-2xl font-bold text-gray-800">สภาวะเอลนีโญ/ลานีญา (ENSO)</h3>
-              <p className="text-sm text-gray-600">El Niño-Southern Oscillation</p>
+              <h3 className="text-lg md:text-2xl font-bold text-gray-800">สภาวะเอลนีโญ/ลานีญา (ENSO)</h3>
+              <p className="text-xs md:text-sm text-gray-600">El Niño-Southern Oscillation</p>
             </div>
           </div>
 
           {/* Current Status */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-white rounded-xl p-5 border-2 border-blue-200">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-3xl">🌧️</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-6">
+            <div className="bg-white rounded-xl p-4 md:p-5 border-2 border-blue-200">
+              <div className="flex items-center gap-2 mb-2 md:mb-3">
+                <span className="text-2xl md:text-3xl">🌧️</span>
                 <div>
-                  <p className="text-xs text-gray-600">สภาวะก่อนหน้า</p>
-                  <p className="font-bold text-gray-800">{weatherForecast.enso.previousStatusThai}</p>
+                  <p className="text-[10px] md:text-xs text-gray-600">สภาวะก่อนหน้า</p>
+                  <p className="text-sm md:text-base font-bold text-gray-800">{weatherForecast.enso.previousStatusThai}</p>
                 </div>
               </div>
-              <p className="text-sm text-gray-600">{weatherForecast.enso.status}</p>
+              <p className="text-xs md:text-sm text-gray-600">{weatherForecast.enso.status}</p>
             </div>
 
-            <div className="bg-white rounded-xl p-5 border-2 border-green-200">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-3xl">⚖️</span>
+            <div className="bg-white rounded-xl p-4 md:p-5 border-2 border-green-200">
+              <div className="flex items-center gap-2 mb-2 md:mb-3">
+                <span className="text-2xl md:text-3xl">⚖️</span>
                 <div>
-                  <p className="text-xs text-gray-600">สภาวะปัจจุบัน</p>
-                  <p className="font-bold text-gray-800">{weatherForecast.enso.currentStatusThai}</p>
+                  <p className="text-[10px] md:text-xs text-gray-600">สภาวะปัจจุบัน</p>
+                  <p className="text-sm md:text-base font-bold text-gray-800">{weatherForecast.enso.currentStatusThai}</p>
                 </div>
               </div>
-              <p className="text-sm text-gray-600">อยู่ในช่วงเปลี่ยนผ่าน</p>
+              <p className="text-xs md:text-sm text-gray-600">อยู่ในช่วงเปลี่ยนผ่าน</p>
             </div>
 
-            <div className="bg-white rounded-xl p-5 border-2 border-red-200">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-3xl">🔥</span>
+            <div className="bg-white rounded-xl p-4 md:p-5 border-2 border-red-200">
+              <div className="flex items-center gap-2 mb-2 md:mb-3">
+                <span className="text-2xl md:text-3xl">🔥</span>
                 <div>
-                  <p className="text-xs text-gray-600">แนวโน้ม</p>
-                  <p className="font-bold text-gray-800">{weatherForecast.enso.trendThai}</p>
+                  <p className="text-[10px] md:text-xs text-gray-600">แนวโน้ม</p>
+                  <p className="text-sm md:text-base font-bold text-gray-800">{weatherForecast.enso.trendThai}</p>
                 </div>
               </div>
-              <p className="text-sm text-gray-600">{weatherForecast.enso.forecast}</p>
+              <p className="text-xs md:text-sm text-gray-600">{weatherForecast.enso.forecast}</p>
             </div>
           </div>
 
           {/* Timeline */}
-          <div className="bg-white rounded-xl p-6 mb-6">
-            <h4 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-orange-600" />
+          <div className="bg-white rounded-xl p-4 md:p-6 mb-6">
+            <h4 className="text-sm md:text-base font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <Calendar className="w-4 h-4 md:w-5 md:h-5 text-orange-600" />
               ช่วงเวลาการเปลี่ยนแปลง
             </h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               {weatherForecast.enso.timeline.map((item, index) => (
                 <div key={index} className="relative">
-                  <div className={`rounded-lg p-4 border-2 ${
+                  <div className={`rounded-lg p-3 md:p-4 border-2 ${
                     item.status === 'la-nina' ? 'bg-blue-50 border-blue-300' :
                     item.status === 'neutral' ? 'bg-gray-50 border-gray-300' :
                     'bg-red-50 border-red-300'
                   }`}>
-                    <div className="text-center mb-3">
-                      <span className="text-4xl">{item.icon}</span>
+                    <div className="text-center mb-2 md:mb-3">
+                      <span className="text-3xl md:text-4xl">{item.icon}</span>
                     </div>
-                    <p className="text-xs text-gray-600 text-center mb-1">{item.period}</p>
-                    <p className="font-bold text-center text-gray-800 mb-2">{item.statusThai}</p>
-                    <p className="text-xs text-gray-600 text-center">{item.description}</p>
+                    <p className="text-[10px] md:text-xs text-gray-600 text-center mb-1">{item.period}</p>
+                    <p className="text-sm md:text-base font-bold text-center text-gray-800 mb-2">{item.statusThai}</p>
+                    <p className="text-[10px] md:text-xs text-gray-600 text-center">{item.description}</p>
                   </div>
                   {index < weatherForecast.enso.timeline.length - 1 && (
                     <div className="hidden md:block absolute top-1/2 -right-2 transform translate-x-1/2 -translate-y-1/2">
@@ -337,28 +339,28 @@ const WeatherForecast = () => {
           </div>
 
           {/* Impact Section */}
-          <div className={`rounded-xl p-6 border-2 ${
+          <div className={`rounded-xl p-4 md:p-6 border-2 ${
             weatherForecast.enso.impact.severity === 'danger' ? 'bg-red-50 border-red-300' :
             weatherForecast.enso.impact.severity === 'warning' ? 'bg-orange-50 border-orange-300' :
             'bg-blue-50 border-blue-300'
           }`}>
-            <div className="flex items-start gap-4">
-              <div className="text-5xl">{weatherForecast.enso.impact.icon}</div>
+            <div className="flex items-start gap-3 md:gap-4">
+              <div className="text-4xl md:text-5xl">{weatherForecast.enso.impact.icon}</div>
               <div className="flex-1">
-                <h4 className="font-bold text-lg text-gray-800 mb-2 flex items-center gap-2">
-                  <AlertCircle className={`w-5 h-5 ${
+                <h4 className="text-base md:text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
+                  <AlertCircle className={`w-4 h-4 md:w-5 md:h-5 ${
                     weatherForecast.enso.impact.severity === 'danger' ? 'text-red-600' :
                     weatherForecast.enso.impact.severity === 'warning' ? 'text-orange-600' :
                     'text-blue-600'
                   }`} />
                   {weatherForecast.enso.impact.title}
                 </h4>
-                <p className="text-gray-700 font-semibold mb-3">
+                <p className="text-sm md:text-base text-gray-700 font-semibold mb-3">
                   {weatherForecast.enso.impact.description}
                 </p>
                 <ul className="space-y-2">
                   {weatherForecast.enso.impact.details.map((detail, index) => (
-                    <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
+                    <li key={index} className="flex items-start gap-2 text-xs md:text-sm text-gray-700">
                       <span className="text-orange-500 font-bold mt-0.5">•</span>
                       <span>{detail}</span>
                     </li>
@@ -370,36 +372,38 @@ const WeatherForecast = () => {
         </div>
 
         {/* Recommendations for Farmers */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 mb-8">
-          <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <Sun className="w-6 h-6 text-green-600" />
+        <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-gray-100 mb-8">
+          <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-4 md:mb-6 flex items-center gap-2">
+            <Sun className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
             คำแนะนำสำหรับเกษตรกร
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {weatherForecast.recommendations.map((rec, index) => (
               <div
                 key={index}
-                className={`${getRecommendationStyle(rec.type)} rounded-xl p-5 border-2 transition-all hover:shadow-md`}
+                className={`${getRecommendationStyle(rec.type)} rounded-xl p-4 md:p-5 border-2 transition-all hover:shadow-md`}
               >
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="text-3xl">{rec.icon}</div>
+                <div className="flex items-start gap-2 md:gap-3 mb-2 md:mb-3">
+                  <div className="text-2xl md:text-3xl">{rec.icon}</div>
                   <div className="flex-1">
                     {rec.date && (
-                      <p className="text-xs font-semibold mb-1">{rec.date}</p>
+                      <p className="text-[10px] md:text-xs font-semibold mb-1">{rec.date}</p>
                     )}
-                    <h4 className="font-bold text-lg mb-1">{rec.title}</h4>
+                    <h4 className="text-sm md:text-lg font-bold mb-1">{rec.title}</h4>
                   </div>
-                  {getRecommendationIcon(rec.type)}
+                  <div className="flex-shrink-0">
+                    {getRecommendationIcon(rec.type)}
+                  </div>
                 </div>
-                <p className="text-sm leading-relaxed">{rec.description}</p>
+                <p className="text-xs md:text-sm leading-relaxed">{rec.description}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Detail Table */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+        {/* Detail Table - Hidden on Mobile */}
+        <div className="hidden md:block bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 className="text-xl font-bold text-gray-800 mb-6">ตารางรายละเอียดพยากรณ์อากาศ</h3>
           
           <div className="overflow-x-auto">
