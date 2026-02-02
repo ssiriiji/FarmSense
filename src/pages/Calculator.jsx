@@ -9,11 +9,16 @@ import {
   Droplets,
   Thermometer,
   MapPin,
-  Calendar
+  Calendar,
+  DollarSign,
+  ShoppingBag,
+  Leaf,
+  Users,
+  Package
 } from 'lucide-react';
 import { useFarm } from '../context/FarmContext';
 import { cropsData } from '../data/crops';
-import { provinces } from '../data/provinces'; // เพิ่มบรรทัดนี้
+import { provinces } from '../data/provinces';
 
 const Calculator = () => {
   const navigate = useNavigate();
@@ -26,10 +31,36 @@ const Calculator = () => {
     crop: selectedCropFromDashboard,
     area: '',
     season: '',
-    province: '' // เปลี่ยนจาก default value
+    province: '',
+    // ต้นทุนที่ผู้ใช้กรอกเอง
+    costs: {
+      seeds: '800',      // เมล็ดพันธุ์
+      fertilizer: '1200', // ปุ๋ย
+      labor: '1200',     // ค่าแรง
+      other: '300'       // อื่นๆ
+    }
   });
 
   const cropInfo = cropsData[formData.crop] || cropsData.rice;
+
+  const handleCostChange = (field, value) => {
+    setFormData({
+      ...formData,
+      costs: {
+        ...formData.costs,
+        [field]: value
+      }
+    });
+  };
+
+  // คำนวณต้นทุนรวมจากที่ผู้ใช้กรอก
+  const calculateTotalCostPerRai = () => {
+    const seeds = parseFloat(formData.costs.seeds) || 0;
+    const fertilizer = parseFloat(formData.costs.fertilizer) || 0;
+    const labor = parseFloat(formData.costs.labor) || 0;
+    const other = parseFloat(formData.costs.other) || 0;
+    return seeds + fertilizer + labor + other;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,12 +68,11 @@ const Calculator = () => {
     const area = parseFloat(formData.area);
     const yieldPerRai = cropInfo.cultivation.yieldPerRai;
     const pricePerKg = cropInfo.prices.daily.price / 1000;
-    const costPerRai = cropInfo.cultivation.costPerRai;
-    const laborCost = cropInfo.cultivation.laborCost;
+    const costPerRai = calculateTotalCostPerRai(); // ใช้ต้นทุนที่ผู้ใช้กรอก
     
     const totalYield = area * yieldPerRai;
     const totalRevenue = totalYield * pricePerKg;
-    const totalCost = area * (costPerRai + laborCost);
+    const totalCost = area * costPerRai;
     const profit = totalRevenue - totalCost;
     const profitPerRai = profit / area;
     
@@ -59,7 +89,13 @@ const Calculator = () => {
       yieldPerRai: yieldPerRai,
       totalYield: totalYield,
       costPerRai: costPerRai,
-      laborCost: laborCost,
+      // เก็บรายละเอียดต้นทุน
+      costBreakdown: {
+        seeds: parseFloat(formData.costs.seeds) || 0,
+        fertilizer: parseFloat(formData.costs.fertilizer) || 0,
+        labor: parseFloat(formData.costs.labor) || 0,
+        other: parseFloat(formData.costs.other) || 0
+      },
       totalCost: totalCost,
       currentPrice: cropInfo.prices.daily.price,
       pricePerKg: pricePerKg,
@@ -115,6 +151,8 @@ const Calculator = () => {
     
     return recommendation;
   };
+
+  const totalCostPerRai = calculateTotalCostPerRai();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -197,7 +235,7 @@ const Calculator = () => {
                   </select>
                 </div>
 
-                {/* จังหวัด - เปลี่ยนเป็น dropdown */}
+                {/* จังหวัด */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-3">
                     จังหวัด
@@ -224,6 +262,91 @@ const Calculator = () => {
                   คำนวณผลผลิต
                 </button>
               </form>
+            </div>
+
+            {/* ฟอร์มต้นทุน - ใหม่! */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+              <h3 className="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+                <DollarSign className="w-6 h-6 text-orange-600" />
+                ต้นทุนการผลิต (โดยประมาณ / ต่อไร่)
+              </h3>
+              <p className="text-sm text-gray-600 mb-6">กรอกต้นทุนของคุณเพื่อคำนวณกำไรที่แม่นยำ</p>
+              
+              <div className="space-y-4">
+                {/* เมล็ดพันธุ์ */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                    <ShoppingBag className="w-4 h-4 text-green-600" />
+                    เมล็ดพันธุ์ (บาท/ไร่)
+                  </label>
+                  <input
+                    type="number"
+                    step="1"
+                    value={formData.costs.seeds}
+                    onChange={(e) => handleCostChange('seeds', e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition hover:border-gray-300"
+                    placeholder="เช่น 800"
+                  />
+                </div>
+
+                {/* ปุ๋ย */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                    <Leaf className="w-4 h-4 text-green-600" />
+                    ปุ๋ย (บาท/ไร่)
+                  </label>
+                  <input
+                    type="number"
+                    step="1"
+                    value={formData.costs.fertilizer}
+                    onChange={(e) => handleCostChange('fertilizer', e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition hover:border-gray-300"
+                    placeholder="เช่น 1200"
+                  />
+                </div>
+
+                {/* ค่าแรง */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                    <Users className="w-4 h-4 text-green-600" />
+                    ค่าแรง (บาท/ไร่)
+                  </label>
+                  <input
+                    type="number"
+                    step="1"
+                    value={formData.costs.labor}
+                    onChange={(e) => handleCostChange('labor', e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition hover:border-gray-300"
+                    placeholder="เช่น 1200"
+                  />
+                </div>
+
+                {/* อื่นๆ */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                    <Package className="w-4 h-4 text-green-600" />
+                    อื่น ๆ (บาท/ไร่)
+                  </label>
+                  <input
+                    type="number"
+                    step="1"
+                    value={formData.costs.other}
+                    onChange={(e) => handleCostChange('other', e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition hover:border-gray-300"
+                    placeholder="เช่น 300"
+                  />
+                </div>
+
+                {/* สรุปต้นทุนรวม */}
+                <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-5 border-2 border-orange-200 mt-6">
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-bold text-gray-800">ต้นทุนรวม (ต่อไร่)</span>
+                    <span className="text-3xl font-bold text-orange-600">
+                      {totalCostPerRai.toLocaleString()} บาท
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* ข้อมูลราคาและผลผลิต */}
@@ -288,9 +411,9 @@ const Calculator = () => {
                 </div>
 
                 <div className="flex items-center justify-between p-3 bg-white rounded-lg">
-                  <span className="text-gray-600 font-medium">ต้นทุนต่อไร่</span>
+                  <span className="text-gray-600 font-medium">ต้นทุนที่คุณกรอก</span>
                   <span className="font-bold text-orange-600">
-                    {(cropInfo.cultivation.costPerRai + cropInfo.cultivation.laborCost).toLocaleString()} บาท
+                    {totalCostPerRai.toLocaleString()} บาท/ไร่
                   </span>
                 </div>
               </div>

@@ -11,7 +11,7 @@ export const mockMarketPrices = [
     trend: 'up',
     changePercent: 5.2,
     lastUpdate: '23 ม.ค. 2569',
-    image: 'https://img.kapook.com/u/2024/Jarosphan/Home/Cleaning/159982/r02.jpg'
+    image: 'https://www.prachachat.net/wp-content/uploads/2025/01/cover-2025-01-30T120729.275.jpg'
   },
   {
     id: 2,
