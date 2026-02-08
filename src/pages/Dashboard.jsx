@@ -1,4 +1,4 @@
-// src/pages/Dashboard.jsx
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   CloudRain, 
@@ -10,21 +10,54 @@ import {
   Bell,
   User,
   LogOut,
-  Menu,
   Cloud,
   AlertTriangle,
   CheckCircle,
   Newspaper,
-  ExternalLink
+  ExternalLink,
+  Loader
 } from 'lucide-react';
 import { useFarm } from '../context/FarmContext';
-import { mockWeatherData } from '../data/weather';
+import { weatherService } from '../services/weatherService'; // ✅ เปลี่ยนเป็น named import
 import { mockMarketPrices } from '../data/marketPrices';
 import { agricultureNews } from '../data/news';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, logout } = useFarm();
+  
+  const [currentWeather, setCurrentWeather] = useState(null);
+  const [forecast, setForecast] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const [current, forecastData] = await Promise.all([
+          weatherService.getCurrentWeather('Bangkok'),
+          weatherService.getForecast('Bangkok')
+        ]);
+        
+        setCurrentWeather(current);
+        setForecast(forecastData);
+      } catch (err) {
+        console.error('Error fetching weather:', err);
+        setError('ไม่สามารถโหลดข้อมูลอากาศได้');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWeather();
+    
+    // อัปเดตทุก 30 นาที
+    const interval = setInterval(fetchWeather, 30 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -37,24 +70,13 @@ const Dashboard = () => {
     return <Minus className="w-4 h-4 text-gray-600" />;
   };
 
-  const getTrendColor = (trend) => {
-    if (trend === 'up') return 'text-green-600';
-    if (trend === 'down') return 'text-red-600';
-    return 'text-gray-600';
-  };
-
   const getCategoryColor = (category) => {
     switch(category) {
-      case 'นโยบาย':
-        return 'bg-blue-100 text-blue-700';
-      case 'ราคาสินค้า':
-        return 'bg-green-100 text-green-700';
-      case 'เทคโนโลยี':
-        return 'bg-purple-100 text-purple-700';
-      case 'สภาพอากาศ':
-        return 'bg-orange-100 text-orange-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
+      case 'นโยบาย': return 'bg-blue-100 text-blue-700';
+      case 'ราคาสินค้า': return 'bg-green-100 text-green-700';
+      case 'เทคโนโลยี': return 'bg-purple-100 text-purple-700';
+      case 'สภาพอากาศ': return 'bg-orange-100 text-orange-700';
+      default: return 'bg-gray-100 text-gray-700';
     }
   };
 
@@ -101,81 +123,119 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-800 mb-2">ภาพรวมวันนี้</h2>
-          <p className="text-gray-600">{mockWeatherData.current.date}</p>
+          <p className="text-gray-600">
+            {new Date().toLocaleDateString('th-TH', { 
+              weekday: 'long', 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}
+          </p>
         </div>
 
-        {/* Weather Card - Mini Version (Green Theme) */}
+        {/* Weather Card */}
         <div className="mb-8">
-          <div 
-            onClick={() => navigate('/weather')}
-            className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-lg cursor-pointer hover:shadow-2xl transform hover:scale-[1.01] transition duration-200"
-          >
-            {/* Current Weather */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-4">
-                <CloudRain className="w-10 h-10" />
+          {loading ? (
+            <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-8 text-white shadow-lg">
+              <div className="flex items-center justify-center gap-4">
+                <Loader className="w-8 h-8 animate-spin" />
+                <p className="text-lg">กำลังโหลดข้อมูลอากาศ...</p>
+              </div>
+            </div>
+          ) : error ? (
+            <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6">
+              <div className="flex items-center gap-3 text-red-700">
+                <AlertTriangle className="w-6 h-6" />
                 <div>
-                  <h3 className="text-3xl font-bold">{mockWeatherData.current.temperature}°C</h3>
-                  <p className="text-sm text-green-100">{mockWeatherData.current.condition}</p>
+                  <p className="font-semibold">⚠️ ไม่สามารถโหลดข้อมูลอากาศได้</p>
+                  <p className="text-sm">กรุณาตรวจสอบ API Key และ verify email</p>
                 </div>
-                <div className="hidden md:flex gap-4 text-xs ml-6">
-                  <div>
-                    <p className="text-green-100">ความชื้น</p>
-                    <p className="font-semibold">{mockWeatherData.current.humidity}%</p>
-                  </div>
-                  <div>
-                    <p className="text-green-100">ปริมาณฝน</p>
-                    <p className="font-semibold">{mockWeatherData.current.rainfall} มม.</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Forecast - Mini */}
-              <div className="hidden lg:flex gap-2">
-                {mockWeatherData.forecast.slice(0, 4).map((day, index) => (
-                  <div key={index} className="bg-white/20 backdrop-blur-sm rounded-lg p-2 text-center min-w-[60px]">
-                    <p className="text-[10px] mb-1">{day.date}</p>
-                    <p className="text-lg font-bold">{day.temp}°</p>
-                  </div>
-                ))}
               </div>
             </div>
-
-            {/* ENSO Status - Single Line (Hidden on Mobile) */}
-            <div className="hidden md:flex items-center justify-between pt-4 border-t border-white/30">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">🌊</span>
-                <p className="text-xs font-semibold">ENSO:</p>
+          ) : currentWeather ? (
+            <div 
+              onClick={() => navigate('/weather-forecast')}
+              className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-lg cursor-pointer hover:shadow-2xl transform hover:scale-[1.01] transition duration-200"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-4">
+                  <div className="text-6xl">
+                    {forecast[0]?.icon || '🌈'}
+                  </div>
+                  <div>
+                    <h3 className="text-3xl font-bold">
+                      {Math.round(currentWeather.main.temp)}°C
+                    </h3>
+                    <p className="text-sm text-green-100">
+                      {currentWeather.weather[0].description}
+                    </p>
+                    <p className="text-xs text-green-200 mt-1">
+                      {currentWeather.name}, {currentWeather.sys.country}
+                    </p>
+                  </div>
+                  <div className="hidden md:flex gap-4 text-xs ml-6">
+                    <div>
+                      <p className="text-green-100">ความชื้น</p>
+                      <p className="font-semibold">{currentWeather.main.humidity}%</p>
+                    </div>
+                    <div>
+                      <p className="text-green-100">ความเร็วลม</p>
+                      <p className="font-semibold">
+                        {(currentWeather.wind.speed * 3.6).toFixed(1)} กม./ชม.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Forecast Mini */}
+                {forecast.length > 0 && (
+                  <div className="hidden lg:flex gap-2">
+                    {forecast.slice(0, 4).map((day, index) => (
+                      <div key={index} className="bg-white/20 backdrop-blur-sm rounded-lg p-2 text-center min-w-[60px]">
+                        <p className="text-[10px] mb-1">{day.date}</p>
+                        <p className="text-lg font-bold">{day.tempHigh}°</p>
+                        <p className="text-2xl">{day.icon}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              <div className="flex items-center gap-2 flex-1 justify-center">
-                <div className="flex items-center gap-1 bg-white/15 rounded-full px-3 py-1 hover:bg-white/20 transition">
-                  <span className="text-sm">🌧️</span>
-                  <p className="text-xs">ลานีญา</p>
-                  <CheckCircle className="w-3 h-3 text-green-300" />
+              {/* ENSO Status */}
+              <div className="hidden md:flex items-center justify-between pt-4 border-t border-white/30">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🌊</span>
+                  <p className="text-xs font-semibold">ENSO:</p>
                 </div>
 
-                <div className="flex items-center gap-1 bg-white/25 rounded-full px-3 py-1 border border-white/40 hover:bg-white/30 transition">
-                  <span className="text-sm">⚖️</span>
-                  <p className="text-xs font-semibold">เป็นกลาง</p>
+                <div className="flex items-center gap-2 flex-1 justify-center">
+                  <div className="flex items-center gap-1 bg-white/15 rounded-full px-3 py-1 hover:bg-white/20 transition">
+                    <span className="text-sm">🌧️</span>
+                    <p className="text-xs">ลานีญา</p>
+                    <CheckCircle className="w-3 h-3 text-green-300" />
+                  </div>
+
+                  <div className="flex items-center gap-1 bg-white/25 rounded-full px-3 py-1 border border-white/40 hover:bg-white/30 transition">
+                    <span className="text-sm">⚖️</span>
+                    <p className="text-xs font-semibold">เป็นกลาง</p>
+                  </div>
+
+                  <div className="flex items-center gap-1 bg-orange-500/40 rounded-full px-3 py-1 border border-orange-300/60 hover:bg-orange-500/50 transition">
+                    <span className="text-sm">🔥</span>
+                    <p className="text-xs font-semibold">→ เอลนีโญ</p>
+                    <AlertTriangle className="w-3 h-3 text-orange-200" />
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-1 bg-orange-500/40 rounded-full px-3 py-1 border border-orange-300/60 hover:bg-orange-500/50 transition">
-                  <span className="text-sm">🔥</span>
-                  <p className="text-xs font-semibold">→ เอลนีโญ</p>
-                  <AlertTriangle className="w-3 h-3 text-orange-200" />
+                <div className="flex items-center gap-1 text-xs opacity-75 hover:opacity-100 transition">
+                  <span>ดูเพิ่ม</span>
+                  <ArrowRight className="w-3 h-3" />
                 </div>
-              </div>
-
-              <div className="flex items-center gap-1 text-xs opacity-75 hover:opacity-100 transition">
-                <span>ดูเพิ่ม</span>
-                <ArrowRight className="w-3 h-3" />
               </div>
             </div>
-          </div>
+          ) : null}
         </div>
 
         {/* Market Prices Section */}
@@ -346,7 +406,7 @@ const Dashboard = () => {
           </button>
 
           <button
-            onClick={() => navigate('/weather')}
+            onClick={() => navigate('/weather-forecast')}
             className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition text-left group"
           >
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-purple-200 transition">

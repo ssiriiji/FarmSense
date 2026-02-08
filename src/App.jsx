@@ -7,7 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Calculator from './pages/Calculator';
 import Results from './pages/Results';
 import PriceTrend from './pages/PriceTrend';
-import WeatherForecast from './pages/WeatherForecast'; // เพิ่มบรรทัดนี้
+import WeatherForecast from './pages/WeatherForecast';
 
 function App() {
   return (
@@ -21,7 +21,8 @@ function App() {
           <Route path="/calculator" element={<Calculator />} />
           <Route path="/results" element={<Results />} />
           <Route path="/price-trend" element={<PriceTrend />} />
-          <Route path="/weather" element={<WeatherForecast />} /> {/* เพิ่มบรรทัดนี้ */}
+          <Route path="/weather" element={<WeatherForecast />} />
+          <Route path="/weather-forecast" element={<WeatherForecast />} /> {/* ✅ เพิ่มบรรทัดนี้ */}
         </Routes>
       </Router>
     </FarmProvider>
